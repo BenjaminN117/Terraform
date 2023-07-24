@@ -1,7 +1,7 @@
 // Setup the S3 bucket to hold the backend configs
 
 resource "aws_s3_bucket" "dev_terraform_profile" {
-  bucket = "dev-terraform-profile"
+  bucket = "TERRAFORM BUCKET"
 
   lifecycle {
     prevent_destroy = true

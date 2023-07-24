@@ -14,8 +14,8 @@ resource "aws_iam_policy" "terraform_s3_restriction" {
             "Effect": "Deny",
             "Action": "s3:*",
             "Resource": [
-                "arn:aws:s3:::dev-terraform-profile",
-                "arn:aws:s3:::dev-terraform-profile/*"
+                "arn:aws:s3:::TERRAFORM BUCKET NAME",
+                "arn:aws:s3:::TERRAFORM BUCKET NAME/*"
             ]
         }
     ]
