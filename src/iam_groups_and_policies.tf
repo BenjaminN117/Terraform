@@ -3,22 +3,23 @@
 resource "aws_iam_group" "developers_group" {
   name = "developers_group"
   // "Used for standard developers - Does not allow access to Terraform config"
-  path = "/users/developers"
+  path = "/users/developers/"
 }
 
 resource "aws_iam_group" "elevated_developers_group" {
   name = "elevated_developers_group"
   // "Used for developers who also need access to Terraform config
-  path = "/users/elevated_developers"
+  path = "/users/elevated_developers/"
 }
 
 resource "aws_iam_group" "billing_group" {
   name = "billing_group"
   // Used for staff that need only billing access
-  path = "/users/billing"
+  path = "/users/billing/"
 }
 
-/// Policy Creation ///
+
+/// Base Policy Creation ///
 
 resource "aws_iam_group_policy" "developers_policy" {
   name = "developers_policy"
@@ -27,23 +28,13 @@ resource "aws_iam_group_policy" "developers_policy" {
   policy = jsonencode({
     
     "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Deny",
-            "Action": "s3:*",
-            "Resource": [
-                "arn:aws:s3:::dev-terraform-profile",
-                "arn:aws:s3:::dev-terraform-profile/*"
-            ]
-        },
-        
+    "Statement": [        
         {
             "Effect": "Allow",
             "Action": "*",
             "Resource": "*"
         }
     ]
-
   }
   )
 }
@@ -62,6 +53,7 @@ resource "aws_iam_group_policy" "elevated_developers_policy" {
     ]
 })
 }
+
 
 resource "aws_iam_group_policy" "billing_policy" {
   name = "billing_policy"
@@ -158,4 +150,29 @@ resource "aws_iam_group_policy" "billing_policy" {
 		}
 	]
 })
+}
+
+
+
+
+/// Adding other policies to groups ///
+
+
+## Developer Group ##
+resource "aws_iam_group_policy_attachment" "developer_group_attach_terra" {
+  group      = aws_iam_group.developers_group.name
+  policy_arn = aws_iam_policy.terraform_s3_restriction.arn
+}
+
+resource "aws_iam_group_policy_attachment" "developer_group_attach_billing" {
+  group      = aws_iam_group.developers_group.name
+  policy_arn = aws_iam_policy.billing_restriction.arn
+}
+
+
+## Elevated Developer Group ##
+
+resource "aws_iam_group_policy_attachment" "developer_group_attach_billing" {
+  group      = aws_iam_group.developers_group.name
+  policy_arn = aws_iam_policy.billing_restriction.arn
 }
