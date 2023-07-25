@@ -4,6 +4,9 @@ Terraform config for quickly setting up a new AWS environment
 
 This is a platform to build on but gives an initial start to provisioning with Terraform.
 
+Uses S3 for backend config and Dynamo DB for state locking. Also restricts users access to the Terraform bucket through IAM policies
+
+
 ## Resources Provisioned
 
 ### IAM
